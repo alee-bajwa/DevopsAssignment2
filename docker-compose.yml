@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  database:
+    image: postgres:13
+    container_name: hakibank-db-part1
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: adminpassword
+      POSTGRES_DB: hakibank
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  backend:
+    image: ichasadullah/hakibank-backend:v1
+    container_name: hakibank-backend-part1
+    environment:
+      # This connects the backend to the database
+      DATABASE_URL: postgresql://admin:adminpassword@database:5432/hakibank
+    ports:
+      - "8005:8000"
+    depends_on:
+      - database
+
+  frontend:
+    image: ichasadullah/hakibank-frontend:v1
+    container_name: hakibank-frontend-part1
+    ports:
+      - "3005:3000"
+    depends_on:
+      - backend
+
+volumes:
+  db-data:
