@@ -1,36 +1,37 @@
 version: '3.8'
-
 services:
-  database:
+  db-pipeline:
     image: postgres:13
-    container_name: hakibank-db-part1
+    container_name: hakibank-db-part2
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: adminpassword
       POSTGRES_DB: hakibank
+    ports:
+      - "5433:5432"
+
+  backend-pipeline:
+    image: python:3.9-slim
+    container_name: hakibank-backend-part2
+    working_dir: /app
     volumes:
-      - db-data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-
-  backend:
-    image: ichasadullah/hakibank-backend:v1
-    container_name: hakibank-backend-part1
+      - ./backend:/app
+    command: bash -c "pip install -r requirements.txt && python run.py"
     environment:
-      # This connects the backend to the database
-      DATABASE_URL: postgresql://admin:adminpassword@database:5432/hakibank
+      DATABASE_URL: postgresql://admin:adminpassword@db-pipeline:5432/hakibank
     ports:
-      - "8000:8000"
+      - "8000:8000" # Part 2 uses 8000
     depends_on:
-      - database
+      - db-pipeline
 
-  frontend:
-    image: ichasadullah/hakibank-frontend:v1
-    container_name: hakibank-frontend-part1
+  frontend-pipeline:
+    image: node:18-alpine
+    container_name: hakibank-frontend-part2
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    command: sh -c "npm install && npm run build && npm install -g serve && serve -s build -l 3000"
     ports:
-      - "3000:3000"
+      - "3000:3000" # Part 2 uses 3000
     depends_on:
-      - backend
-
-volumes:
-  db-data:
+      - backend-pipeline

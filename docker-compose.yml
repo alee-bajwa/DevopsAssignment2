@@ -1,5 +1,4 @@
 version: '3.8'
-
 services:
   database:
     image: postgres:13
@@ -17,10 +16,9 @@ services:
     image: ichasadullah/hakibank-backend:v1
     container_name: hakibank-backend-part1
     environment:
-      # This connects the backend to the database
       DATABASE_URL: postgresql://admin:adminpassword@database:5432/hakibank
     ports:
-      - "8005:8000"
+      - "8005:8000" # Using 8005 so Part 2 can use 8000
     depends_on:
       - database
 
@@ -28,7 +26,7 @@ services:
     image: ichasadullah/hakibank-frontend:v1
     container_name: hakibank-frontend-part1
     ports:
-      - "3005:3000"
+      - "3005:3000" # Using 3005 so Part 2 can use 3000
     depends_on:
       - backend
 

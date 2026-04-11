@@ -3,17 +3,15 @@ pipeline {
     stages {
         stage('Fetch Code') {
             steps {
-                // This step automatically uses the Repository URL 
-                // and Credentials configured in the job settings
-                checkout scm 
+                checkout scm
             }
         }
         stage('Deploy Part 2') {
             steps {
                 script {
-                    // This command runs inside the folder where Jenkins downloaded the code
-                    sh 'docker-compose -f docker-compose-pipeline.yml down || true'
-                    sh 'docker-compose -f docker-compose-pipeline.yml up -d'
+                    // -p pipeline ensures no conflict with Part 1
+                    sh 'docker-compose -f docker-compose-pipeline.yml -p pipeline down || true'
+                    sh 'docker-compose -f docker-compose-pipeline.yml -p pipeline up -d'
                 }
             }
         }
