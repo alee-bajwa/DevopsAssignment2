@@ -12,8 +12,8 @@ pipeline {
             steps {
                 script {
                     // Bring up the deployment first so tests can access it
-                    sh 'docker compose -f docker-compose-pipeline.yml -p pipeline down || true'
-                    sh 'docker compose -f docker-compose-pipeline.yml -p pipeline up -d'
+                    sh 'docker-compose -f docker-compose-pipeline.yml -p pipeline down || true'
+                    sh 'docker-compose -f docker-compose-pipeline.yml -p pipeline up -d'
                     
                     // Poll http://localhost:3000 until it is available (timeout after 5 minutes)
                     sh '''
