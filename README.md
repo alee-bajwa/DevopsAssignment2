@@ -72,7 +72,7 @@ A complete, production-ready online banking system built with React and FastAPI 
 - `GET /api/bills/services` - Get bill services
 - `POST /api/bills/pay` - Pay bill
 
-### Admin
+## Admin
 - `GET /api/admin/stats` - Dashboard stats
 - `GET /api/admin/users` - Get all users
 - `PUT /api/admin/users/:id` - Update user
